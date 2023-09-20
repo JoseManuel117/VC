@@ -1,14 +1,22 @@
-Para esta entrega hemos realizado las siguientes tareas:
-    1º  Creación de una imagen con la textura del tablero de ajedrez: Lo hemos hecho de dos formas diferentes, en una de ellas hemos creado un grid de 8*8 sobre la imagen y hemos puesto a blanco los recuadros de grid correspondientes (uno sí, uno no).
+# Tareas Realizadas
 
-        La otra forma es más "a lo bruto", hemos recorrido la imagen con un bucle anidado y hemos ido pintando un cuadrado blanco cuando tocaba.
+A continuación, se detallan las tareas que hemos completado en esta entrega:
 
-    2º  Creación de una imagen al estilo Mondrian: Creamos un grid de 200x200 y luego pintamos los cuadrados por filas y columnas.
-    
-    3º  Creación de una imagen al estilo Mondrian con funciones: Hemos pintado rectangulos sobre una imagen de fondo negro para recrearlo, cada rectangulo se genera de forma aleatoria dentro de un margen pre-establecido para que no se solapen los unos a los otros, y siempre exista un cuadrado en una de las zonas.
+1. **Creación de una Imagen con Textura de Tablero de Ajedrez:**
+    - Hemos abordado esta tarea de dos maneras distintas. En una de ellas, creamos una cuadrícula de 8x8 sobre la imagen y alteramos los cuadros de la cuadrícula correspondientes, alternando entre blanco y otro color.
+    - En la segunda aproximación, hemos empleado un enfoque más directo, recorriendo la imagen con bucles anidados y ajustando los píxeles a blanco cuando era necesario.
 
-    4º  Modificación de los valores de un plano de la imagen: Captamos las imagenes que transmite la webcam y los hemos separado los canales, acto seguido le aumentamos la intensidad de los mismos en 75 y mostramos la fusión de la imagen original junto con otras 3 imágenes que representan 2 canales unidos. El resultado podría valer como propuesta de pop-art
+2. **Creación de una Imagen al Estilo Mondrian:**
+    - Creamos una cuadrícula de 200x200 y procedimos a pintar cuadrados por filas y columnas.
 
-    5º  Pintar círculos en las posiciones del píxel más claro y oscuro de la imagen: creamos un frame en escala de grises para poder interpretar de mejor forma su "luminosidad", acto seguido empezamos a recorrer cada píxel de dicho frame y guardamos la posición del píxel con el valor más alto y el más bajo. Una vez recorrida toda la imagen, pintamos un círculo verde en el píxel más claro y uno rojo en la del más oscuro.
+3. **Creación de una Imagen al Estilo Mondrian con Funciones:**
+    - Hemos pintado rectángulos sobre un fondo negro para recrear el estilo Mondrian. Cada rectángulo se genera de forma aleatoria dentro de un margen predefinido para evitar la superposición y garantizar la presencia de un cuadrado en cada zona.
 
-    6º  Propuesta de pop-art: Hemos realizado una similar a la ya implementada en el documento original pero programado de forma diferente. Recorremos el frame de la misma forma que en el ejercicio anterior y si el frame encaja dentro de uno de los 3 umbrales que hemos seleccionado (azul,rojo,verde) lo pintamos de dicho color. Lo cual lo hace muy poco eficiente pero también lo hace nuestro.
+4. **Modificación de los Valores de un Plano de la Imagen:**
+    - Capturamos imágenes de la cámara web y separamos sus canales. A continuación, aumentamos la intensidad de cada canal en 75 unidades y mostramos la fusión de la imagen original junto con otras tres imágenes que representan la unión de dos canales. Este resultado podría considerarse como una propuesta de pop-art.
+
+5. **Pintura de Círculos en las Posiciones del Píxel Más Claro y Más Oscuro de la Imagen:**
+    - Creamos un fotograma en escala de grises para mejorar la interpretación de la "luminosidad". Luego, recorrimos cada píxel de este fotograma y registramos la posición del píxel con el valor más alto y más bajo. Posteriormente, pintamos un círculo verde en la posición del píxel más claro y otro rojo en la posición del píxel más oscuro.
+
+6. **Propuesta de Pop-Art:**
+    - Hemos desarrollado una propuesta similar a la anterior, pero implementada de manera diferente. Recorrimos el fotograma de la misma manera que en el ejercicio anterior y si el valor del píxel estaba dentro de uno de los tres umbrales predefinidos (azul, rojo, verde), lo pintamos del color correspondiente. Esto hace que la propuesta sea poco eficiente pero también distintiva y personalizada.
