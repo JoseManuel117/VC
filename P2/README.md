@@ -1,23 +1,27 @@
 ## Práctica 2. Funciones básicas de OpenCV
 
-### Contenidos
+**Tarea 1:**
 
-[Aspectos cubiertos](#21-aspectos-cubiertos)  
-[Entrega](#22-entrega)  
+Hemos aprovechado el mismo código ya existente en la práctica para hacer el conteo de columnas. Para hacer el de filas, únicamente hay que modificar el segundo parámetro de la función `cv2.reduce()`, poniendo un 1 en vez de un 0.
 
-### 2.1. Aspectos cubiertos y entrega
+**Tarea 2:**
 
-La práctica precedente mostraba el modo de acceder al valor asociado a un píxel, así como su modificación. Dicha capacidad abre muchísimas posibilidades, existiendo un nutrido grupo de operaciones habituales, que por ello están presentes en bibliotecas como la que utilizaremos a lo largo del curso: [OpenCV](https://opencv.org).
+Como dicta el enunciado, hemos repetido el mismo proceso pero cambiando únicamente la imagen. Hemos cambiado el incivilizado mandril por una foto del Nano (Fernando Alonso).
 
-El cuaderno proporcionado para esta práctica (VC_P2.ipynb) recuerda en primer término la conversión de formato del espacio de color, tanto la conversión a grises, como a otros espacios de representación, que facilitan determinadas operaciones. Tras recuperar el manejo de dichas utilidades, el cuaderno cubre un conjunto de funciones básicas de procesamiento de imágenes disponibles en OpenCV, como son las utilidades ya mencionadas de conversión de espacio de color, añadiendo las de cálculo de bordes o contornos, umbralizado, histogramas, diferencias de fotogramas o sustracción de fondo.
+**Tarea 3:**
 
-### 2.2. Entrega
+Realizamos los procesos pertinentes previos al análisis de la imagen y luego realizamos el cálculo de bordes tanto horizontal como vertical con Sobel. Después, lo convertimos a una imagen de 8 bits y realizamos el conteo tanto por filas como por columnas por encima del 0.95*máximo. Una vez representadas las gráficas, se pueden comparar con las de Canny ascendiendo en el código.
 
-A lo largo del cuaderno se proponen diversas variaciones sobre el código, dando libertad para escoger la imagen de trabajo. Para finalizar se proponen dos tareas más abiertas para su entrega (enlace github por medio del campus virtual incluyendo cuaderno(s) resolviendo las tareas y su README) y posterior presentación, dando cierto grado de decisión en cuanto al resultado a producir:
+**Tarea 4:**
 
-- Por un lado proponer una demo que recorre las funciones hasta ahora trabajadas.   
-- Por otro lado, mostrando como inspiración la instalación debida a Niklas Roy titulada [My little piece of privacy](https://www.niklasroy.com/project/88/my-little-piece-of-privacy), plantear una reinterpretación de la parte de procesamiento de la imagen, dado que no disponemos en el laboratorio de motores y cortinas :). Pueden tomarse como punto de inspiración otras ideas de procesamiento de la imagen mostradas duranta las sesiones de teoría como la instalación [Messa di voce](https://youtu.be/GfoqiyB1ndE?feature=shared) o [Virtual air guitar](https://youtu.be/FIAmyoEpV5c?feature=shared).
+La tarea 4 está realizada en el cuaderno.
 
+**Tarea 5:**
 
-***
-Bajo licencia de Creative Commons Reconocimiento - No Comercial 4.0 Internacional
+Para la tarea 5 hemos decidido crear un censurador de caras. Para ello, usamos un clasificador de cascada llamado "haarcascade_frontalface_alt.xml", el cual se puede descargar desde [este enlace](https://github.com/opencv/opencv/tree/master/data/haarcascades).
+
+El esquema de funcionamiento es el siguiente:
+- Cargamos el clasificador en el objeto `face_detect`.
+- Seguimos el proceso típico que hemos utilizado hasta ahora para analizar las imágenes de un video.
+- Para seleccionar las caras dentro de la imagen, debemos usar la función `detectMultiScale()` dentro del objeto `face_data`, ya que pueden haber múltiples caras en la misma imagen.
+- Ahora creamos un rectángulo sobre esas mismas caras y lo difuminamos usando `GaussianBlur()` y sustituimos la región de la cara de la imagen original por la versión difuminada.
