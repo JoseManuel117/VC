@@ -51,4 +51,4 @@ Para la creación de los clasificadores, primero hemos analizado los contornos d
 Los clasificadores han sido diseñados siguiendo estos parámetros, un aspecto muy determinante para diferenciar entre FRA y TAR es el color del contorno. 
 
 La matriz de confusión obtenida es la siguiente:
-![Foto matriz de confusión](foto_output_t3.png)
+![Foto matriz de confusión](foto_output_t3.PNG)
