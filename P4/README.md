@@ -8,7 +8,7 @@ En esta práctica, hemos desarrollado varios filtros que utiliza DLIB68. A conti
 
 Hemos implementado un filtro inspirado en las imágenes de militares en las que se censuran los ojos. El funcionamiento de este filtro se basa en el procesamiento de los landmarks faciales para identificar los puntos extremos verticales y horizontales de ambos ojos. Luego, se agrega un pequeño margen para alargar el rectángulo encargado de la censura. Este rectángulo consiste en la sustitución de los píxeles en el área que comprende los extremos mencionados anteriormente con píxeles negros.
 
-![Foto con la censura de los ojos](censura_ojos.png)
+![Foto con la censura de los ojos](censura_ojos_2.png)
 
 ## Modo 2: Censura por Pixelado
 
@@ -24,7 +24,7 @@ En el tercer modo, se utiliza una censura gaussiana. El funcionamiento es simila
 - Aplicación de un desenfoque gaussiano ([cv2.GaussianBlur](https://docs.opencv.org/4.x/d4/d13/tutorial_py_filtering.html)) al marco de la cara.
 - Inserción del marco censurado en la imagen.
 
-![Foto con la censura de la cara](censura_cara.png)
+![Foto con la censura de la cara](censura_cara_2.png)
 
 ## Modo 4: Detector de Sonrisas
 
@@ -33,4 +33,4 @@ En el último modo, se detectan sonrisas en la imagen procesando los puntos asoc
 - Comparación de este ángulo con un umbral predefinido (`ANGLE_THRESHOLD`) para determinar si se ha detectado una sonrisa.
 - Si se detecta una sonrisa, se agrega una nariz de payaso a la persona.
 
-![Foto de detector de sonrisas](jose_felih.png)
+![Foto de detector de sonrisas](jose_felih_2.png)
