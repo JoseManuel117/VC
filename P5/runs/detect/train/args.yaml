@@ -5,7 +5,7 @@ data: C:/Users/ganma/Downloads/dataset/data.yaml
 epochs: 100
 patience: 50
 batch: 16
-imgsz: 640
+imgsz: 800
 save: true
 save_period: -1
 cache: false
