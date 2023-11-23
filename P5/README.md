@@ -100,6 +100,12 @@ Ahora que hemos confirmado que tenemos bien emplementado CUDA, pasaremos al entr
 
 El primer paso consiste en crear un dataset con imágenes y etiquetas de las clases que queremos identificar, en nuestro caso, como trazar rectángulos sobre matrículas no demuestra ningún tipo de habilidad y lo puede hacer cualquier estudiante de primaria, hemos decidido descargar un [***dataset***](https://universe.roboflow.com/augmented-startups/vehicle-registration-plates-trudk/dataset/2) ya hecho desde Roboflow.
 
+El dataset consta de 21175 imágenes de multitud de vehículos distribuidos de la siguiente forma:
+
+- 18528 Para entrenamiento
+- 1765 Para validación 
+- 882 Para test 
+
 El proceso para entrenarlo es estremadamente sencillo;
 
 ```
@@ -126,7 +132,7 @@ Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
                  Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100%|██████████| 10/10 [00:07<00:00,  1.32it/s]
                    all       1765       1840      0.979      0.959      0.978      0.712
 ```
-Una vez entrenado, los pesos se guardan en la carpeta/trainX/weights/best.pt, así como otros datos relativos al entrenamiento, como las siguientes imágenes sobre la validación
+Una vez entrenado, los pesos se guardan en la carpeta/trainX/weights/best.pt, así como otros datos relativos al entrenamiento, como las siguientes imágenes sobre la validación de la época con mayor rendimiento:
 
 <figure>
   <img src="./runs/detect/train4/confusion_matrix_normalized.png" alt="Matriz de confusion" title="Matriz de confusión" width="600" height="350">
@@ -136,3 +142,11 @@ Una vez entrenado, los pesos se guardan en la carpeta/trainX/weights/best.pt, as
   <figcaption><strong>Gráficas de entrenamiento</strong></figcaption>
 </figure>
 
+Como podemos observar,  el modelo tiene una tasa de acierto y una confianza general bastante. Para usar el modelo basta con seleccionar la carpeta con los pesos que aportan mayor rendimiento y usarla como si fuera el modelo de yolo normal. 
+
+Para el prototipo, hemos seguido el mismo esquema que en el primero, usamos el modelo de yolo estándar para encontrar coches y, dentro de esos coches, aplicamos nuestro modelo custom para identificar matrículas:
+
+<figure>
+  <img src="./readmeResources/varios_coches_bien.png" alt="Identificación de matriculas con modleo entrenado" title="Identificador de matriculas conmodelo entrenado" width="600" height="350">
+  <figcaption><strong>Identificacion con modelo entrenado</strong></figcaption>
+</figure>
