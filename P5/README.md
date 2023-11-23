@@ -98,4 +98,24 @@ Ahora que hemos confirmado que tenemos bien emplementado CUDA, pasaremos al entr
 
 #### Entrenamiento modelo custom yolov8
 
+El primer paso consiste en crear un dataset con imágenes y etiquetas de las clases que queremos identificar, en nuestro caso, como trazar rectángulos sobre matrículas no demuestra ningún tipo de habilidad y lo puede hacer cualquier estudiante de primaria, hemos decidido descargar un [***dataset***](https://universe.roboflow.com/augmented-startups/vehicle-registration-plates-trudk/dataset/2) ya hecho desde Roboflow.
 
+El proceso para entrenarlo es estremadamente sencillo;
+
+```
+model = YOLO("yolov8n.yaml")
+# Train the model with adjusted settings
+results = model.train(data='C:/Users/ganma/Documents/Datasets/datasetMaestro/data.yaml', 
+                        epochs=300, 
+                        imgsz=416, 
+                        plots=True,
+                        patience= 25,
+                        batch=-1,
+                        workers=12,
+                        device=0,
+                        )  
+```
+
+Como se puede ver, hemos decidido hacer 300 épocas poniendole un earlystopping a las 25, para que en caso de no encontrar mejora, pare el entrenamiento y evite el overfitting.
+
+También hemos decidido poner el tamaño del batch en automático, para que lo asigne en función de la capacidad de la tarjeta gráfrica, en nuestro caso decidió usar el 70% de la misma (8.5 GB/12). El número de workers va asociado al número de hilos que es capaz de manejar el procesador. 
