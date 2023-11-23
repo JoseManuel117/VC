@@ -2,11 +2,11 @@
 **Autores:** Josito Manuel Hernández Aparicio & Sheila Cazorla Rodriguez
 
 ### Contenidos
- [Descripción General](#descripción-general-de-la-práctica)
- [Tarea 1](#tarea-1)
- [Tarea 2](#tarea-2)
- [Instalacion Cuda](#instalación-cuda)
- [Entrenamiento Modelo Custom](#entrenamiento-modelo-custom-yolov8)
+- [Descripción General](#descripción-general-de-la-práctica)
+- [Tarea 1](#tarea-1)
+- [Tarea 2](#tarea-2)
+- [Instalacion Cuda](#instalación-cuda)
+- [Entrenamiento Modelo Custom](#entrenamiento-modelo-custom-yolov8)
 
 ### Descripción general de la práctica 
 En esta práctica la tarea propuesta consiste en desarrollar un **prototipo** de sistema que identifique la matrícula de un vehículo mediante dos formas diferentes, para la primera, denominada **tarea 1**, hemos usado exclusiamente la detección de contornos. Para la segunda, hemos entrenado un modelo de [***yolov8***](https://docs.ultralytics.com/es/).
