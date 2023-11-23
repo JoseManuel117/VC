@@ -119,3 +119,20 @@ results = model.train(data='C:/Users/ganma/Documents/Datasets/datasetMaestro/dat
 Como se puede ver, hemos decidido hacer 300 épocas poniendole un earlystopping a las 25, para que en caso de no encontrar mejora, pare el entrenamiento y evite el overfitting.
 
 También hemos decidido poner el tamaño del batch en automático, para que lo asigne en función de la capacidad de la tarjeta gráfrica, en nuestro caso decidió usar el 70% de la misma (8.5 GB/12). El número de workers va asociado al número de hilos que es capaz de manejar el procesador. 
+
+```
+Epoch    GPU_mem   box_loss   cls_loss   dfl_loss  Instances       Size
+     84/300         7G      1.007     0.4253      1.155          1        416: 100%|██████████| 192/192 [00:35<00:00,  5.44it/s]
+                 Class     Images  Instances      Box(P          R      mAP50  mAP50-95): 100%|██████████| 10/10 [00:07<00:00,  1.32it/s]
+                   all       1765       1840      0.979      0.959      0.978      0.712
+```
+Una vez entrenado, los pesos se guardan en la carpeta/trainX/weights/best.pt, así como otros datos relativos al entrenamiento, como las siguientes imágenes sobre la validación
+
+<figure>
+  <img src="./runs/detect/train4/confusion_matrix_normalized.png" alt="Matriz de confusion" title="Matriz de confusión" width="600" height="350">
+  <figcaption><strong>Matriz de Confusión Normalizada</strong></figcaption>
+
+  <img src="./runs/detect/train4/results.png" alt="Resultados" title="Resultados" width="600" height="350">
+  <figcaption><strong>Gráficas de entrenamiento</strong></figcaption>
+</figure>
+
