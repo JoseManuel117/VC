@@ -1,156 +1,101 @@
 ## Práctica 5. Reconocimiento de matrículas
+**Autores:** Josito Manuel Hernández Aparicio & Sheila Cazorla Rodriguez
 
 ### Contenidos
+ [Descripción General](#descripción-general-de-la-práctica)
+ [Tarea 1](#tarea-1)
+ [Tarea 2](#tarea-2)
+ [Instalacion Cuda](#instalación-cuda)
+ [Entrenamiento Modelo Custom](#entrenamiento-modelo-custom-yolov8)
 
-[Tarea](#51-tarea)  
-[YOLOv8](#52-yolov8)  
-[OCRs](#53-ocrs)  
+### Descripción general de la práctica 
+En esta práctica la tarea propuesta consiste en desarrollar un **prototipo** de sistema que identifique la matrícula de un vehículo mediante dos formas diferentes, para la primera, denominada **tarea 1**, hemos usado exclusiamente la detección de contornos. Para la segunda, hemos entrenado un modelo de [***yolov8***](https://docs.ultralytics.com/es/).
 
-<!--[YOLOv7](#52-yolov7)  -->
+### Tarea 1
+Para identificar las matrículas de los coches, primero empleamos el modelo estándar de [***yolov8***](https://docs.ultralytics.com/es/) para identificar los coches, una vez encontrado los coches visibles en la imágen, empleamos una función llamada **encontrar_matricula** que se encarga de identificar la matrícula dentro de la imagen pasada como parámetro, como este tipo de detección puede ser muy precaria, debemos facilitarle la detección lo máximo posible. 
 
+Para ello, sabiendo de antemano que la inmensa mayoría de las matrículas se encuentran en la parte inferior de los coches, le pasamos a la función únicamente la mitad inferior del coche detectado, como se muestra a continuación:
 
-## 5.1 Tarea
+<figure>
+  <img src="./readmeResources/zona%20de%20deteccion.png" alt="Imagen de la zona de detección" title="Imagen Zona Detección" width="600" height="350">
+  <figcaption><strong>Zona de detección en azul, matrícula encontrada en verde</strong></figcaption>
+</figure>
 
-En esta práctica describo en primer término la tarea:  **El objetivo es desarrollar un prototipo de sistema que identifique la matrícula de un vehículo, bien desde una imagen o desde un vídeo**.
+#### Primer Prototipo
+Para la detección de la matrícula en el primer prototipo, nos hemos valido de la detección de contornos de la biblioteca de [***cv2.findContours***](https://docs.opencv.org/4.x/d4/d73/tutorial_py_contours_begin.html), hacer que una detección de este tipo funcione correctamente en la mayoría de situaciones reales (matrículas giradas, poco visibles, etc...) se hace extremadamente difícil, al principio lo intentamos hacer mejorando la detección de contornos rectangulares, intentando hallar una relación correcta entre ser más estrictos a la hora de encontrar rectángulos, lo cual hace que no encuentre algunas matrículass, y ser más flexíbles a la hora de identificarlos, algo que hace que encuentre rectángulos donde, a interpretación humanda, no los hay. Un resultado de un primer prototipo sería el siguiente:
 
-Nos centraremos en matrículas españolas, siendo una primera subtarea recopilar o capturar imágenes o vídeos que contengan vehículos con su matrícula visible. Si necesitan cámaras, trípode, etc. hablen conmigo.
+<figure>
+  <img src="./readmeResources/Reconocimiento regular.png" alt="Primer prototipo" title="Imagen Detección Matrículas" width="600" height="350">
+  <figcaption><strong>En verde lo detectado por la función</strong></figcaption>
+</figure>
 
-Si bien cuentan con libertad a la hora de escoger los módulos que integren en el prototipo, les propongo los siguientes apartados un detector de objetos, que permita localizar vehículos, y un reconocedor de texto, para el que deberán definir alguna estrategia de cara a que se focalice en las zonas de probable presencia de la matrícula. En una primera fase, las zonas probables se asumen que corresponden a zonas rectangulares (su contorno lo es), y en una segunda fase, les propongo crear un detector de matrículas basado en YOLOv8.
+Como se puede observar, identifica correctamente la matrícula, pero también muchos otros contornos, conseguimos volver la detección más estricta especificando un número de vértices máximo, ya que un rectángulo solo tiene 4, si bien la detección mejoró considerablemente, la detección seguía siendo demasidado precaria. Tras otra tanda de futiles intentos, se nos ocurrió lo que acabó siendo nuestro prototipo final.
 
+#### Prototipo Final
 
+Para el prototipo final de esta tarea, lo que hicimos fue hacer que **detectar_matricula** identificase contornos estríctamente rectangulares, lo cual nos dio el siguiente resultado:
 
-<!--
-## 5.2 YOLOv7
+<figure>
+  <img src="./readmeResources/rectangulos sin comprobar.png" alt="Prototipo final sin verificar" title="Imagen Detección Matrículas PF" width="600" height="350">
+  <figcaption><strong>Detección de rectángulos</strong></figcaption>
+</figure>
 
-La familia de detectores de YOLO cuenta con mucho tirón en años recientes dada su velicidad y calidad de detección. En esta línea la reciente propuesta de
-[YOLOv7](https://github.com/WongKinYiu/yolov7) declara [batir los registros](https://amalaj7.medium.com/yolov7-now-outperforms-all-known-object-detectors-fd7170e8542d) de versiones previas.
+Como se puede observar, la matrícula la identifica a la perfección, también encuentra multitud de rectángulos de diversas dimensiones. Llegados a este punto, nos parecía imposible diferenciar de forma convencional entre los rectángulos detectados y el que contenía la matrícula usando exclusivamente funciones [***opencv***](https://opencv.org). 
 
-En los dos enlaces previos se incluyen instrucciones de instalación. En mi experiencia para su instalación en Windows, en primer lugar me he colocado en la carpeta en la que quiero descargar y tecleado los siguientes comandos:
+La lógica nos dicta que, de todos esos rectángulos, el único que contiene texto (por texto entendemos más de 2 dígitos) es el que contiene la matrícula, así pues, usamos [***easyocr***](https://github.com/JaidedAI/EasyOCR) para buscar texto en los rectángulos y, en caso de que encuentre 2 o más dígitos, lo identifica como la matrícula deseada
+```
+reader = easyocr.Reader(['es'])
+results = reader.readtext(crop_rgb)
+if results:
+                matricula_text = results[0][-2]
+                if len(matricula_text) >= 2:
+                    cv2.drawContours(car_img, [box], 0, (0, 255, 0), 3)
+                    return matricula_text
+```
+Lo cual hace que la detección sea algo lenta, pero muy precisa
+<figure>
+  <img src="./readmeResources/Reconocimiento Regular 1.PNG" alt="Prototipo final verificando" title="Imagen Detección Matrículas PF" width="600" height="350">
+  <figcaption><strong>Detección del prototipo final</strong></figcaption>
+  <img src="./readmeResources/Reconocimiento Regular 2.PNG" alt="Prototipo final verificando" title="Imagen Detección Matrículas PF" width="600" height="350">
+  <figcaption><strong>Detección del prototipo final</strong></figcaption>
+</figure>
+
+### Tarea 2
+
+#### Instalación CUDA
+Para esta tarea hemos empleado 2 modelos de [***yolov8***](https://docs.ultralytics.com/es/), el estándar y uno entrenado por nosotros. El proceso para entrenarlo es el siguiente:
+
+Como no es ideal tener el ordenador trabajando exclusivamente en esto durante varias horas, lo ideal es usar la GPU para entrenarla, para ello, debemos instalar [***CUDA***](https://developer.nvidia.com/cuda-toolkit) y hacer que sea compatible con nuestro environment de anaconda. 
+
+Para ver qué versiones son compatibles con nuestro environment sin tener que realizar pasos adicionales, debemos ejecutar el siguiente comando dentro del ***anaconda prompt***
 
 ```
-git clone https://github.com/WongKinYiu/yolov7.git
-cd yolov7
-conda create -n yolov7 python=3.9 -y   
-conda activate yolov7
-pip install -r requirements.txt
+conda search cudatoolkit
 ```
 
-Una vez finalizados, no he tenido problemas en ejecutar procesando con la CPU. Les muestro un resumen
-de llamadas al demostrados *detect.py* procesando una carpeta de imágenes, un vídeo o directamente desde la cámara web:
+Lo cual nos devuelve lo siguiente:
+
+<figure>
+  <img src="./readmeResources/conda search.PNG" alt="Output comando" title="OutpuT conda search" width="600" height="350">
+  <figcaption><strong>Versiones compatibles</strong></figcaption>
+</figure>
+
+Como podemos ver, la versión compatible más alta es la 11.8.0, una vez [***descargado***](https://developer.nvidia.com/cuda-11-8-0-download-archive?target_os=Linux) e instalado, debemos realizar el siguiente comando en el ***anaconda prompt*** para instalar pytorch dentro del environment en el que queremos utilizar CUDA
 
 ```
-#Inferencia
-python detect.py --weights yolov7.pt --conf 0.25 --img-size 640 --source rutaalacarpetaconimágenes\ --view-img --device cpu
-
-#De vídeo almacenado
-python detect.py --weights yolov7.pt --conf 0.25 --img-size 640 --source inference/bird.mp4 --view-img --device cpu
-
-#webcam
-python detect.py --weights yolov7.pt --conf 0.25 --img-size 640 --source 0 --device cpu
-
-#webcam GPU
-python detect.py --weights yolov7.pt --conf 0.25 --img-size 640 --source 0 --device 0
+conda install pytorch torchvision torchaudio pytorch-cuda=11.8 -c pytorch -c nvidia
 ```
 
-Creo que apreciarán que no va muy lento. Como en el PC del despacho tengo una GPU, he intentado configurar el
-*environment* para poder usarla con el demostrador. Sin embargo hasta ahora no he tenido fortuna, pese a tener instalado CUDA y considerar haber seguido la documentación de [pytorch](https://pytorch.org/get-started/locally/),
-para instalar la combinación de
-CUDA, pytorch, torchvision y cudatoolkit con el supuesto comando:
-
-```
-conda install pytorch==1.12.1 torchvision==0.13.1 cudatoolkit=11.4 -c pytorch
-```
-
-Pese a ello, CUDA sigue mostrándose no disponible. Lo he comprobado al teclear
+Una vez instalado todo correctamente, podemos verificar que funciona mediante el siguiente comando de ***pytorch*** 
 
 ```
 import torch
 print(torch.cuda.is_available())
 ```
+Debería de devolvernos True
 
-Me sigue devolviendo *false*. En cualquier caso, me va con CPU con aceptable tasa de fotogramas por segundo con la webcam, por lo que parece viable u uso aún sin GPU. Ustedes aportarán más visiones y experiencias.
--->
+Ahora que hemos confirmado que tenemos bien emplementado CUDA, pasaremos al entrenamiento del modelo
 
-## 5.2 YOLOv8
-
-<!-- environment VC_P1 e portátil -->
-
-Durante este año 2023, Ultralytics presenta yolov8. Para su instalación en el environment *VC_P1* he seguido los pasos del  [tutorial de instalación de Ultralytics] (https://docs.ultralytics.com/quickstart/#install-ultralytics). No dejes de lado la [documentación](https://docs.ultralytics.com)
-
-```
-pip install ultralytics
-
-```
-
-Ha sido muy poco engorroso en mi experiencia. Una vez instalada, puede ejecutarse desde línea decomandos con algo como:
+#### Entrenamiento modelo custom yolov8
 
 
-<!-- yolo detect predict model=yolov8n.pt source="C:/Users/otsed/Desktop/RUNNERS_ILUSOS/Multimedia/Bibs/TGC23_PdH_C0056_resultado.mp4"  -->
-```
-yolo detect predict model=yolov8n.pt source="rutavideo"
-```
-
-Con el parámetro model se define el modelo preentrenado a utilizar, los resultados los almacena en una carpeta *runs/detect/predict*. Los distintos parámetros de la ejecución se describen en la documentación del modo [*predict*](https://docs.ultralytics.com/modes/predict/). El modelo escogido detecta contenedores, para la segmentación semántica sugerir por ejemplo el modelo *yolov8n-seg.pt*.
-
-<!--A este segundo también le añadí la opción "device" para decirle qué tarjetas tiene que usar.-->
-
-En las primeras celdas del cuaderno ejemplo, *VC_P5.ipynb*, se incluye un ejemplo de procesamiento y dibujado de las cajas contenedoras haciendo uso de un modelo desde código python. Se presentan todas las clases sin realizar ningún tipo de filtrado.
-
-
-
-
-<!--
-
-https://stackoverflow.com/questions/75714505/how-to-only-detect-person-class-from-yolov8
-
-El código para entrenar es este:
-
-```
-
-yolo detect train model=yolov8n.pt data=experiment3.yaml imgsz=1920 batch=8 device=0,1,2,3 epochs=100
-```
-
-
-[YOLO-NAS](https://github.com/Deci-AI/super-gradients/blob/master/documentation/source/YoloNASQuickstart.md) para mejorar con objetos pequeños y pocos recursos ...
-
-
--->
-
-### 5.3. OCRs
-
-Como reconocedores de caracteres, les propongo dos opciones disponibles.
-Para ambos se incluyen demostradores mínimos en el cuaderno proporcionado esta semana.
-<!-- Al ser un nuevo *environment* no olvidar  que es necesario instalar el paquete para ejecutar cuadernos, desde consola-->
-
-
-Por un lado, el conocido [Tesseract](https://github.com/tesseract-ocr/tesseract), para el que desde python será necesario un wrapper, además de instalarlo previamente.
-La documentación de [Tesseract](https://tesseract-ocr.github.io/tessdoc/Installation.html) dispone de información para su instalación en distintos sistemas operativos
-Para entorno Windows, siguiendo las instrucciones de la mencionada documentación, me he descargado los binarios desde el repositorio para tal fin de la [Universidad Manheim](https://github.com/UB-Mannheim/tesseract/wiki). Al instalar he indicado que incluya datos de otros lenguajes, en mi caso español. Además he anotado la carpeta donde se instala.
-
-El *wrapper* es [pytesseract](https://pypi.org/project/pytesseract/) se instala cómodamente en el *environment* creado en el paso anterior con:
-
-```
-pip install pytesseract
-```
-
-
-Por otro lado, [easyOCR](https://github.com/JaidedAI/EasyOCR) que ofrece un cómodo soporte para más de 80 lenguas, cuya instalación es aún más simple, basta con:
-
-```
-pip install easyocr
-```
-
-
-
-
-
-***
-
-
-Llegado a este punto:
-¡¡A jugarrrr!!
-
-
-
-***
-Bajo licencia de Creative Commons Reconocimiento - No Comercial 4.0 Internacional
