@@ -17,22 +17,27 @@
     -[Preparación del entorno](#preparación-del-entorno)
     -[Ubicación Seleccionada](#ubicación-seleccionada)
     -[Preparación del Vídeo](#preparación-del-vídeo)
-    -[Delimitación de las Zonas](#)
-
+    -[Delimitación de las Zonas](#delimitación-de-las-zonas)
+    -[Ejecución Final](#ejecución)
+- [Resultado Final](#resultado-final)
 
 ## Motivación del trabajo 
-La motivación del trabajo surgió cuando Josito tuvo que esperar, bajo la lluvia, por la noche, 2 minutos con el semáforo en rojo mientras veía como de vez en cuando pasaba algún que otro coche
-
 La motivación del trabajo surge a raíz de fatídicas experiencias vividas en semáforos por los colaboradores de este proyecto.
 
 ## Objetivo de la propuesta
 
-El objetivo de este trabajo consiste en la implantación de un semáforo automático, el cual se vale de [***yolov8***](https://docs.ultralytics.com/es/) para el reconocimiento tanto de vehículos como de peatones y [***ByteTrack***](https://github.com/ifzhang/ByteTrack) para el trackeo de dichos objetos. La intención es que, en vez de funcionar como un semáforo convencional en el que los tiempos están predefinidos, programa controlará cuantos vehículos y peatones llevan esperando a que su semáforo se ponga en verde y, en función del número de estos y del tiempo que lleven esperando, cederá el paso de una forma justa. De esta forma, se espera evitar tiempos ociosos o situaciones en las que se una gran cantidad de peatones esté esperando con el semáforo en rojo cuando el número de coches en transito es claramente inferior al de peatones, de igual forma se traslada en el caso de los vehículos.
+El objetivo de este trabajo consiste en la implantación de un semáforo automático, el cual se vale de [***yolov8***](https://docs.ultralytics.com/es/) para el reconocimiento tanto de vehículos como de peatones y [***ByteTrack***](https://github.com/ifzhang/ByteTrack) para el trackeo de dichos objetos. 
+
+La intención es que, en vez de funcionar como un semáforo convencional en el que los tiempos están predefinidos, programa controlará cuantos vehículos y peatones llevan esperando a que su semáforo se ponga en verde y, en función del número de estos y del tiempo que lleven esperando, cederá el paso de una forma justa. 
+
+De esta forma, se espera evitar tiempos ociosos o situaciones en las que se una gran cantidad de peatones esté esperando con el semáforo en rojo cuando el número de coches en transito es claramente inferior al de peatones, de igual forma se traslada en el caso de los vehículos.
 
 ## Desarrollo 
 
 ### Tecnologías empleadas
-Como ya ha sido mencionado, el programa ha sido desarrollado en python, empleando principalmente [***yolov8***](https://docs.ultralytics.com/es/) y [***ByteTrack***](https://github.com/ifzhang/ByteTrack). Alojado en un enviroment de [**Anaconda**](https://www.anaconda.com). Para el correcto funcionamiento de ByteTrack, es necesario tener instalado en el equipo [**Microsoft C++ Build Tools**](https://visualstudio.microsoft.com/visual-cpp-build-tools/), para la preparación de los videos se hizo uso de [**FFmpeg**](https://ffmpeg.org).
+Como ya ha sido mencionado, el programa ha sido desarrollado en python, empleando principalmente [***yolov8***](https://docs.ultralytics.com/es/) y [***ByteTrack***](https://github.com/ifzhang/ByteTrack). Alojado todo en un enviroment de [**Anaconda**](https://www.anaconda.com). Para el correcto funcionamiento de ByteTrack, es necesario tener instalado en el equipo [**Microsoft C++ Build Tools**](https://visualstudio.microsoft.com/visual-cpp-build-tools/), para la preparación de los videos se hizo uso de [**FFmpeg**](https://ffmpeg.org).
+
+Para la implementación de bytrack hemos seguido la guía del [**github de jbagnato**](https://github.com/jbagnato/machine-learning/tree/master/yolo_tracking)
 
 Para un mayor rendimiento, hemos usado [**CUDA**](https://developer.nvidia.com/cuda-11-8-0-download-archive) para ejeutarlo en una RTX 3080TI de 12 Gigas.
 
@@ -178,7 +183,7 @@ ffmpeg -i .ruta_video_original -b:v 2000k -bufsize 3000k ruta_video_final
 Con el video preparado, podemos proceder a definir lo que interpretaremos como zonas de espera.
 
 ### Delimitación de las zonas
-Para definir las zonas hemos añadido un bloque de código al cuaderno que, al ejecutarse, mostrará el video y permitirá marcar, aprentando en la ventana del mismo, marcar un recuadro que delimite la zona, una vez marcado, al darle a esc, imprimirá las coordenadas de inicio y final del recuadro. 
+Para definir las zonas hemos añadido un bloque de código al cuaderno que, al ejecutarse, mostrará el video y permitirá marcar, apretando en la ventana del mismo, marcar un recuadro que delimite la zona, una vez marcado, al darle a esc, imprimirá las coordenadas de inicio y final del recuadro. 
 
 Es importante que el video en el que se marca la zona y el video sobre el que se van a aplicar tengan las mismas dimensiones. Así como el marcar el recuadro de izquierda a derecha, ya que de hacerlo de derecha a izquierda, te dará el punto de inicio y final al revés.
 
@@ -186,3 +191,107 @@ Es importante que el video en el que se marca la zona y el video sobre el que se
   <img src="./readmeFiles/gif_zona.gif" alt="Descripción alternativa del GIF" width="750px"/>
 </p>
 
+Hemos definido un total de 4 zonas:
+
+<center>
+    <figure>
+        <img src="./readmeFiles/zonas.jpg" alt="Nuevo path" title="Opción de configuracion" width="750px">
+    </figure>
+</center>
+
+### Ejecución Final
+
+A continuación se procede a explicar el código final del trabajo, ubicado en el fichero [trabajo_final.ipynb](./trabajo_final.ipynb) se obviaran los detalles más simples.
+
+Comenzaremos importando las dependencias necesarias, acto seguido definiremos los parámetros del modelo de detección.
+
+```
+conf_thres = 0.25
+iou_thres = 0.45
+classes = [0, 2, 3, 5, 7, 1] #Solo nos interesa que reconozca las personas y los vehículos terrestres
+agnostic_nms = False
+max_det = 1000
+line_thickness = 2
+half = False
+imgsz = (1280, 704) #Cambiar a las dimensiones exactas
+vid_stride = 1
+```
+
+Es una configuración bastante simple, los cambios más importantes son la especificación de las clases que queremos que detecte, en este caso, personas y vehículos terrestres.
+
+Luego especificamos la ruta del video ya modificado con las funciones anteriores. Ahora definiremos el dispositivo en el que queremos que se ejecute la detección:
+
+```
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+print("Usando dispositivo:", device)
+```
+De esta forma se podrá ejecutar aún cuando el dispositivo no tenga tarjeta gráfica o no haya podido configurar [**CUDA**](https://developer.nvidia.com/cuda-11-8-0-download-archive) correctamente.
+
+Ahora configuraremos el tracker:
+
+```
+bytetracker = BYTETracker(
+    track_thresh=0.6, match_thresh=0.8, track_buffer=120, frame_rate=24
+)
+tracker = bytetracker
+```
+- <strong>BYTETracker</strong> es una clase que implementa el algoritmo de seguimiento de objetos
+- <strong>track_thresh=0.6</strong> es el umbral de seguimiento. Define la confianza mínima para que un objeto sea considerado en el seguimiento. Un valor de 0.6 significa que cualquier detección con una confianza menor al 60% será descartada.
+- <strong>match_thresh=0.8</strong> Este es el umbral de coincidencia. Se utiliza para decidir si dos detecciones en frames consecutivos corresponden al mismo objeto.
+- <strong>track_buffer=120 </strong> Es el tamaño del buffer de seguimiento. Define cuántos frames se mantendrán en memoria para el seguimiento. 
+-<strong>frame_rate=30</strong> Especifica la tasa de cuadros por segundo (FPS) del video.  
+
+Luego cargamos el video en una variable para procesarlo y creamos las listas que corresponden con las coordenadas de las zonas, así como los diccionarios que guardarán los ids de los objetos que se encuentran en cada zona junto con el tiempo que lleva esperando.
+
+Para comprobar si el objeto se encuentra en la zona, simplemente verificamos si el recuadro que identifica al objeto toca, por poco que sea, la zona delimitada.
+
+```
+def interseccion_zona(bbox, zona):
+    """ Verifica si la caja delimitadora (bbox) se cruza con la zona definida. """
+    x1, y1, x2, y2 = bbox
+    zx1, zy1, zx2, zy2 = zona
+    return not (x2 < zx1 or x1 > zx2 or y2 < zy1 or y1 > zy2)
+```
+El bloque de código posterior se usa únicamente para dibujar los semáforos en la imagen:
+
+<center>
+    <figure>
+        <img src="./readmeFiles/semaforo.PNG" alt="Nuevo path" title="Opción de configuracion" style="width: 40%;">
+        <figcaption><strong>Semáforo meramente representativo, pendiente de mejorar</strong></figcaption>
+    </figure>
+</center>
+
+Seguido del mismo tenemos la clase que se encarga de controlar la lógica del semáforo, esta clase cuenta con variables que serán usadas para llevar un registro de la información del frame en el que se ha llamado a la función “asignar_estado_semaforo”. 
+
+Primeramente se obtiene los tiempos de espera totales y se imprimen, luego se comprueba si la cantidad de vehículos es mayor que la de personas y si el tiempo de espera de estos es mayor que el tiempo de espera de las personas, o también si hay menos vehículos pero éstos llevan esperando más tiempo, por último comprobamos de forma individual cada vehículo para que su tiempo de espera no sobrepase un umbral, estas mismas comparaciones se hacen con las personas, y así definimos el estado del semáforo. 
+
+Por último, hace un borrado de los tiempos de espera guardados para la siguiente ejecución de la función.
+
+La función final que stremea visualmente el vídeo junto con el semáforo y los objetos detectados, sigue el esquema típico de identificación pero unido al tracking de [***ByteTrack***](https://github.com/ifzhang/ByteTrack). Para asegurarnos de que solo tiene en cuenta los objetos ubicados en las zonas correspondientes, tenemos varias sentencias de comprobación similares a esta:
+
+```
+if c == 0 and (interseccion_zona(bbox, zona_personas) or interseccion_zona(bbox, zona_personas2)):
+```
+Como se puede ver comprueba si el objeto es de tipo persona y luego si se encuentra en alguna de las dos zonas de espera de peatones. En caso de que se cumpla se ejecutará la siguiente sección del código:
+```
+contador_personas +=1
+contador_semaforo.contador_personas = contador_personas
+# Verificar si el objeto persona está dentro de la zona personas
+if id not in tiempo_espera_personas:
+    tiempo_espera_personas[id] = tiempo_actual
+
+tiempo_deteccion = tiempo_actual - tiempo_espera_personas[id]
+contador_semaforo.tiempo_espera_personas[id] = tiempo_deteccion                    
+color_especial = (0, 100, 0) # Color verde fuerte
+```
+Como se puede ver, primero comprueba si el objeto ya estaba en la lista de espera en el frame anterior, en caso de que no lo esté, lo añade, en caso de que ya esté actualiza el tiempo que lleva esperando, acto seguido actualiza la información en el objeto semáforo y resalta el recuadro del objeto de un color diferente al normal para remarcar visualmente que se encuentra en la zona
+
+### Resultado Final
+
+La automatización completa resulta imposible ya que el video y el movimiento de las personas y vehículos no puede ser alterado. Así pues, hemos preferido que el semaforo se cambie (en función de todo lo descrito previamente) al apretar la telca <strong>"q"</strong>, alternativamente, también es posible imprimir por consola el tiempo que tardan los peatones en cruzar el paso de peatón. Para ello basta con apretar la telca <strong>m</strong>.
+
+<p align="center">
+  <img src="./readmeFiles/gif_final.gif" alt="Descripción alternativa del GIF" width="750px"/>
+</p>
+
+Para acceder al video explicativo, acceder a este [enlace](https://alumnosulpgc-my.sharepoint.com/:v:/g/personal/sheila_cazorla101_alu_ulpgc_es/ERukA6Qgt-hElSIlywQKAzQBD0mPokPXhpLIse9Cq_iVzw?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=WwwsZM)
