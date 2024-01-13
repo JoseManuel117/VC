@@ -17,7 +17,7 @@
     -[Preparación del entorno](#preparación-del-entorno)
     -[Ubicación Seleccionada](#ubicación-seleccionada)
     -[Preparación del Vídeo](#preparación-del-vídeo)
-
+    -[Delimitación de las Zonas](#)
 
 
 ## Motivación del trabajo 
@@ -175,5 +175,14 @@ ffmpeg -i .ruta_video_original -b:v 2000k -bufsize 3000k ruta_video_final
 ```
 <strong>**Puede ser necesario usar "\\" en vez de "/"</strong>
 
-Con el video preparado, podemos proceder a preparar la función final.
+Con el video preparado, podemos proceder a definir lo que interpretaremos como zonas de espera.
+
+### Delimitación de las zonas
+Para definir las zonas hemos añadido un bloque de código al cuaderno que, al ejecutarse, mostrará el video y permitirá marcar, aprentando en la ventana del mismo, marcar un recuadro que delimite la zona, una vez marcado, al darle a esc, imprimirá las coordenadas de inicio y final del recuadro. 
+
+Es importante que el video en el que se marca la zona y el video sobre el que se van a aplicar tengan las mismas dimensiones. Así como el marcar el recuadro de izquierda a derecha, ya que de hacerlo de derecha a izquierda, te dará el punto de inicio y final al revés.
+
+<p align="center">
+  <img src="./readmeFiles/gif_zona.gif" alt="Descripción alternativa del GIF" width="750px"/>
+</p>
 
