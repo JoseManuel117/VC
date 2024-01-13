@@ -144,13 +144,13 @@ Para conseguir cierto grado de vista aerea, nos subimos a un muro de un edificio
 
 ### Preparación del vídeo
 
-Al ser grabada con una cámara de calidad, el vídeo tiene una resolución excesiva, así pues, creamos algunas funciones, ubicadas en el fichero [VC_TRABAJO](./VC_TRABAJO.ipynb) usando [openCV](https://pypi.org/project/opencv-python/) para reducirle calidad, los cambios hechos al video original son los siguientes:
+Al ser grabada con una cámara de calidad, el vídeo tiene una resolución excesiva, así pues, creamos algunas funciones, ubicadas en el fichero [**funciones_auxiliares.ipynb**](./funciones_auxiliares.ipynb) usando [**openCV**](https://pypi.org/project/opencv-python/) para reducirle calidad, los cambios hechos al video original son los siguientes:
 
 - <strong>Reducción de la resolución a 1280 * 720 píxeles</strong>
 - <strong>Reducción de la resolución vertical hasta un múltiplo de 32 para que sea compatible con CUDA</strong>
 - <strong>Reducción de los fotogramas a 24</strong>
 
-No obstante, al terminar de hacer todos estos cambios, nos daremos cuenta de que el video final puede llegar a pesar hasta el triple que el original, cosa que no tiene sentido después de todos estos cambios, esto se debe a que, por defecto, los cambios hechos por [openCV](https://pypi.org/project/opencv-python/) dejan el video con un bitrate exageradamente alto, por ello, emplearemos [**FFmpeg**](https://ffmpeg.org) para reducirselo.
+No obstante, al terminar de hacer todos estos cambios, nos daremos cuenta de que el video final puede llegar a pesar hasta el triple que el original, cosa que no tiene sentido después de todos estos cambios, esto se debe a que, por defecto, los cambios hechos por [**openCV**](https://pypi.org/project/opencv-python/) dejan el video con un bitrate exageradamente alto, por ello, emplearemos [**FFmpeg**](https://ffmpeg.org) para reducirselo.
 
 ```
 import subprocess
