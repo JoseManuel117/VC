@@ -55,7 +55,7 @@ conda activate nombre_enviroment
 ```
 Las dependencias necesarias están señaladas en el fichero [requirements.txt](./requirements.txt), antes de instalarlas. Una de las dependencias, requerida para usar [***ByteTrack***](https://github.com/ifzhang/ByteTrack), es [**Linear Assignment Problem Solver**](https://github.com/gatagat/lap) o "lap". Para que funcione debemos de tener [**Microsoft C++ Build Tools**](https://visualstudio.microsoft.com/visual-cpp-build-tools/). Procedemos a descargarlo de su página oficial, ejecutar el instalador y seleccionar la opción siguiente:
 
-<figure>
+<figure align="center">
   <img src="./readmeFiles/c++tools.png" alt="Visual Studio Installer" title="Opción de instalación">
   <figcaption><strong>Opción marcada con recuadro azúl</strong></figcaption>
 </figure>
@@ -73,7 +73,7 @@ Así pues, deberemos acceder a la carpeta <strong>bin</strong> y copiaremos la r
 
 Ahora accederemos a la ventana de sistema de Windows y seleccionaremos <strong>"Configuración avanzada del sistema" </strong>
 <center>
-<figure>
+<figure align="center">
   <img src="./readmeFiles/sistema.png" alt="Configuración del sistema" title="Opción de configuracion" >
   
   <figcaption><strong>Opción marcada con recuadro azúl</strong></figcaption>
@@ -83,7 +83,7 @@ Ahora accederemos a la ventana de sistema de Windows y seleccionaremos <strong>"
 Se abrirá la siguiente ventana:
 
 <center>
-<figure>
+<figure align="center">
   <img src="./readmeFiles/variables_entorno.png" alt="Configuración variables de entorno" title="Opción de configuracion" >
   <figcaption><strong>Opciones elegidas, de izquierda a derecha, en azúl</strong></figcaption>
 </figure>
@@ -91,7 +91,7 @@ Se abrirá la siguiente ventana:
 Como se ve marcado, deberemos darle a <strong>Variables de entorno</strong>, se abrirá otra ventana y en ella seleccionaremos <strong>Path</strong>, acto seguido apretaremos en <strong>Editar...</strong>, lo cual abrirá otra ventana:
 
 <center>
-<figure>
+<figure align="center">
   <img src="./readmeFiles/nuevo_path.png" alt="Nuevo path" title="Opción de configuracion" >
   <figcaption><strong>Opción elegida en azúl</strong></figcaption>
 </figure>
@@ -120,7 +120,7 @@ Para el desarrollo de la práctica, era necesario encontrar un video de un paso 
 Al principio se intentó extraer un video de internet, lo cual fue imposible ya que ninguno cumplía con la mayoría de puntos previamente mencionados. La solución elegida fue grabar los videos por nuestra cuenta.
 
 <center>
-    <figure>
+    <figure align="center">
         <img src="./readmeFiles/sheilaCamara.jpg" alt="Nuevo path" title="Opción de configuracion" style="width: 50%; float: left;">
         <img src="./readmeFiles/jositoCamara.jpg" alt="Otra Imagen" title="Otra Opción" style="width: 50%; float: right;">
         <figcaption><strong>Intrépidos ingenieros haciendo de fotógrafos</strong></figcaption>
@@ -255,7 +255,7 @@ def interseccion_zona(bbox, zona):
 El bloque de código posterior se usa únicamente para dibujar los semáforos en la imagen:
 
 <center>
-    <figure>
+    <figure align="center">
         <img src="./readmeFiles/semaforo.PNG" alt="Nuevo path" title="Opción de configuracion" style="width: 40%;">
         <figcaption><strong>Semáforo meramente representativo, pendiente de mejorar</strong></figcaption>
     </figure>
