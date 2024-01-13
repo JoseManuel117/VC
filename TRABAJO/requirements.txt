@@ -1,0 +1,9 @@
+# pip install -r requirements.txt
+#Tried on python 3.9.18
+####IMPORTANT: You need to install Microsoft C++ Build Tools: https://visualstudio.microsoft.com/visual-cpp-build-tools/####
+ultralytics==8.0.84
+Cython
+numpy
+lap
+opencv-python
+matplotlib
